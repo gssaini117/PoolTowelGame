@@ -7,6 +7,7 @@ public class SwitchTan : MonoBehaviour
     [SerializeField] Material paleMaterial;
     [SerializeField] Material tanMaterial;
     [SerializeField] Material burntMaterial;
+    [SerializeField] Material angry;
 
     public void setPale()
     {
@@ -21,5 +22,10 @@ public class SwitchTan : MonoBehaviour
     public void setBurnt()
     {
         GetComponent<Renderer>().material = burntMaterial;
+    }
+    
+    public void setAngry()
+    {
+        GetComponent<Renderer>().material = angry;
     }
 }
