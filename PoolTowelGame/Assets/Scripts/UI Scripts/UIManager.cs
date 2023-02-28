@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] bool testing;
+    
     [Header("Canvas References")]
     [SerializeField] Image[] temperatureMeters;
     [SerializeField] Image[] faces;
@@ -27,46 +29,49 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (testing)
         {
-            SetTemperature(0, .8f);
-        }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                SetTemperature(0, .8f);
+            }
 
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            SetTemperature(3, .2f);
-        }
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                SetTemperature(3, .2f);
+            }
 
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            SetAngry(3, true);
-        }
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                SetAngry(3, true);
+            }
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            SetUmbrella(2, true);
-            SetUmbrella(1, true);
-        }
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                SetUmbrella(2, true);
+                SetUmbrella(1, true);
+            }
 
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            SetTowelMeter(.2f);
-            SetLivesRemaining(2);
-        }
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                SetTowelMeter(.2f);
+                SetLivesRemaining(2);
+            }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            SetLivesRemaining(1);
-        }
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                SetLivesRemaining(1);
+            }
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            SetTowels(false, false);
-        }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                SetTowels(false, false);
+            }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            SetTowels(false, true);
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                SetTowels(false, true);
+            }
         }
     }
 
