@@ -1,45 +1,76 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameStates : MonoBehaviour
 {
-    // Game Objects
+    // Arduino Values
+    public SerialController serialController;
+    private string[] arduinoValues;
+    private bool[] arduinoConvertedValues;
+
+    // Towel Values
     public GameObject TowelBar;
     public GameObject TowelSensor1;
-    private bool towel1;
     public GameObject TowelSensor2;
-    private bool towel2;
-    [SerializeField] public GameObject[] WaterSensors;
-    private bool[] water = {false, false};
-    private int[] wetnessFactor = { 1, 1, 1, 1};
-    [SerializeField] public GameObject[] UmbrellaSensors;
-    private bool[] umbrella = {false, false, false, false};
-    private int[] umbrellaActive = { 1, 1, 1, 1 };
-    [SerializeField] public GameObject[] Patrons;
-    private float[] patronStatus = {0f, 0f, 0f, 0f};
-    private bool[] patronReset = {false, false, false, false};
+    private bool towel1; // value of towel sensor 1
+    private bool towel2; // value of towel sensor 2
 
-    // Constants
+    // Water Values
+    [SerializeField] public GameObject[] WaterSensors;
+    private bool[] water = {false, false}; // values of water sensors
+    private int[] wetnessFactor = { 1, 1, 1, 1 }; // rate of water
+
+    // Umbrella Values
+    [SerializeField] public GameObject[] UmbrellaSensors;
+    private bool[] umbrella = {false, false, false, false}; // values of umbrella sensors
+    private int[] umbrellaActive = { 1, 1, 1, 1 }; // value for rate of tanning
+
+    // Patron Values
+    [SerializeField] public GameObject[] Patrons;
+    private float[] patronStatus = {0f, 0f, 0f, 0f}; // values for patron's tans
+    private bool[] patronReset = {false, false, false, false}; // if patron's are currently resetting (takes 5 seconds)
+
+    // Game Constants
     public float gameLength;
     private float gameTimer = 0f;
+    private bool gameOver = false;
+    public float gameOverLength;
+    private float gameOverTimer = 0f;
+
+    // Win Conditions
+    private bool poolBoyWins = false;
+    private bool towelBoyWins = false;
+
+    // Pool Boy Lives
     public int poolBoyChances;
-    private int currentPoolBoyChances = 0;
+    private int currentPoolBoyChances = 0; // actual value
+
+    // Tanning Values
     public float tanningRate;
     public float tanningMin;
     public float tanningMax;
+
+    // Towel Values pt.2 
     public float towelTime;
-    private float currentTowelTime = 0f;
+    private float currentTowelTime = 0f; // actual value
     public float towelDecayRate;
     public float towelGracePeriodDuration;
-    private float towelGracePeriodTimer;
+    private float towelGracePeriodTimer; // actual value
+
+    // Emergency Values
     public float emergencyModeDuration;
-    private float emergencyModeTimer;
+    private float emergencyModeTimer; // actual value
 
     // Start is called before the first frame update
     void Start()
     {
+        serialController = GameObject.Find("SerialController").GetComponent<SerialController>();
+        arduinoValues = new string[8];
+        arduinoConvertedValues = new bool[8];
         gameLength = 180f;
+        gameOverLength = 5f;
         poolBoyChances = 3;
         tanningRate = 1f;
         tanningMin = -10f;
@@ -61,90 +92,122 @@ public class GameStates : MonoBehaviour
     // Fixed Update is called once per frame at 60 fps
     void FixedUpdate()
     {
-        // pool boy chances logic
-        if (currentPoolBoyChances > 3)
+        if (!gameOver)
         {
-            // pool boy loses
-        }
 
-        // emergency mode logic
-        if (water[0] && water[1])
-        {
-            if (emergencyModeTimer < emergencyModeDuration)
+            // pool boy chances logic
+            if (currentPoolBoyChances > 3)
             {
-                emergencyModeTimer += Time.deltaTime;
+                gameOver = true;
+                towelBoyWins = true;
             }
-            else
-            {
-                // pool boy loses
-            }
-        }
-        else
-        {
-            emergencyModeTimer = 0f;
-        }
 
-        // towel time logic
-        Debug.Log(currentTowelTime);
-        TowelBar.transform.localScale = new Vector3(TowelBar.transform.localScale.x, currentTowelTime/10, TowelBar.transform.localScale.z);
-        // ^^ towel bar implementation
-        if (currentTowelTime < 0)
-        {
-            // towel boy loses
-        }
-        if (!towel1 && !towel2)
-        {
-            currentTowelTime -= towelDecayRate * 2 * Time.deltaTime;
-        }
-        else if (towel1 ^ towel2)
-        {
-            if (towelGracePeriodTimer < towelGracePeriodDuration)
+            // emergency mode logic
+            if (water[0] && water[1])
             {
-                towelGracePeriodTimer += Time.deltaTime;
-            }
-            else
-            {
-                currentTowelTime -= towelDecayRate * Time.deltaTime;
-            }
-        }
-        else
-        {
-            towelGracePeriodTimer = 0f;
-        }
-
-        // wetness logic
-        for (int i = 0; i < 4; i++)
-        {
-            if (water[i/2])
-            {
-                wetnessFactor[i] = 2;
-            }
-            else
-            {
-                wetnessFactor[i] = 1;
-            }
-        }
-
-        // patron tanning logic
-        for (int i = 0; i < 4; i++)
-        {
-            if (!patronReset[i])
-            {
-                patronStatus[i] += tanningRate * umbrellaActive[i] * wetnessFactor[i] * Time.deltaTime;
-                if (patronStatus[i] > tanningMax)
+                if (emergencyModeTimer < emergencyModeDuration)
                 {
-                    Patrons[i].GetComponent<SwitchTan>().setBurnt();
-                    StartCoroutine(resetPatron(i));
-                }
-                else if (patronStatus[i] < tanningMin)
-                {
-                    Patrons[i].GetComponent<SwitchTan>().setPale();
-                    StartCoroutine(resetPatron(i));
+                    emergencyModeTimer += Time.deltaTime;
                 }
                 else
                 {
-                    Patrons[i].GetComponent<SwitchTan>().setTan();
+                    gameOver = true;
+                    towelBoyWins = true;
                 }
+            }
+            else
+            {
+                emergencyModeTimer = 0f;
+            }
+
+            // towel time logic
+            //Debug.Log(currentTowelTime);
+            TowelBar.transform.localScale = new Vector3(TowelBar.transform.localScale.x, currentTowelTime / 10, TowelBar.transform.localScale.z);
+            // ^^ towel bar implementation
+            if (currentTowelTime < 0)
+            {
+                gameOver = true;
+                poolBoyWins = true;
+            }
+            if (!towel1 && !towel2)
+            {
+                currentTowelTime -= towelDecayRate * 2 * Time.deltaTime;
+            }
+            else if (towel1 ^ towel2)
+            {
+                if (towelGracePeriodTimer < towelGracePeriodDuration)
+                {
+                    towelGracePeriodTimer += Time.deltaTime;
+                }
+                else
+                {
+                    currentTowelTime -= towelDecayRate * Time.deltaTime;
+                }
+            }
+            else
+            {
+                towelGracePeriodTimer = 0f;
+            }
+
+            // wetness logic
+            for (int i = 0; i < 4; i++)
+            {
+                if (water[i / 2])
+                {
+                    wetnessFactor[i] = 2;
+                }
+                else
+                {
+                    wetnessFactor[i] = 1;
+                }
+            }
+
+            // patron tanning logic
+            for (int i = 0; i < 4; i++)
+            {
+                if (!patronReset[i])
+                {
+                    patronStatus[i] += tanningRate * umbrellaActive[i] * wetnessFactor[i] * Time.deltaTime;
+                    if (patronStatus[i] > tanningMax)
+                    {
+                        Patrons[i].GetComponent<SwitchTan>().setBurnt();
+                        StartCoroutine(resetPatron(i));
+                    }
+                    else if (patronStatus[i] < tanningMin)
+                    {
+                        Patrons[i].GetComponent<SwitchTan>().setPale();
+                        StartCoroutine(resetPatron(i));
+                    }
+                    else
+                    {
+                        Patrons[i].GetComponent<SwitchTan>().setTan();
+                    }
+                }
+            }
+
+            // game timer
+            gameTimer += Time.deltaTime;
+            if (gameTimer > gameLength)
+            {
+                gameOver = true;
+                poolBoyWins = true;
+            }
+        }
+        else
+        {
+            gameOverTimer += Time.deltaTime;
+            if (gameOverTimer > gameOverLength)
+            {
+                SceneManager.LoadScene(0);
+            }
+
+            if (poolBoyWins)
+            {
+                Debug.Log("Pool Boy Wins");
+            }
+            if (towelBoyWins)
+            {
+                Debug.Log("Towel Boy Wins");
             }
         }
 
@@ -154,6 +217,43 @@ public class GameStates : MonoBehaviour
     // TODO: PROCESS ARDUINO INPUTS
     void HandleInput()
     {
+        string message = serialController.ReadSerialMessage();
+
+        if (message == null)
+            return;
+
+        // Check if the message is plain data or a connect/disconnect event.
+        if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_CONNECTED))
+            Debug.Log("Connection established");
+        else if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_DISCONNECTED))
+            Debug.Log("Connection attempt failed or disconnection detected");
+        else
+        {
+            Debug.Log(message);
+            arduinoValues = message.Split(','); 
+            for (int i = 0; i < 8; i++)
+            {
+                if (arduinoValues[i] == "1")
+                    arduinoConvertedValues[i] = true;
+                if (arduinoValues[i] == "0")
+                    arduinoConvertedValues[i] = false;
+            }
+        }
+
+        umbrella[0] = arduinoConvertedValues[0];
+        umbrella[1] = arduinoConvertedValues[1];
+        umbrella[2] = arduinoConvertedValues[2];
+        umbrella[3] = arduinoConvertedValues[3];
+        towel1 = arduinoConvertedValues[4];
+        towel2 = arduinoConvertedValues[5];
+        water[0] = arduinoConvertedValues[6];
+        water[1] = arduinoConvertedValues[7];
+        for (int i = 0; i < 4; i++)
+        {
+            if (umbrella[i]) umbrellaActive[i] = -1;
+            else umbrellaActive[i] = 1;
+        } 
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
             towel1 = !towel1;
@@ -218,11 +318,11 @@ public class GameStates : MonoBehaviour
     public IEnumerator resetPatron(int i)
     {
         patronReset[i] = true;
+        currentPoolBoyChances++;
         yield return new WaitForSeconds(2f);
         Patrons[i].GetComponent<SwitchTan>().setAngry();
         yield return new WaitForSeconds(3f);
         patronStatus[i] = 0;
-        currentPoolBoyChances++;
         patronReset[i] = false;
     }
 }
