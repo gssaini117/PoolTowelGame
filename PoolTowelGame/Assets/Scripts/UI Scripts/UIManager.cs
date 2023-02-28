@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image[] umbrellaSlots;
     [SerializeField] Image[] patronLives;
     [SerializeField] Image[] towelIcons;
+    [SerializeField] Image[] wetCovers;
     [SerializeField] Image towelMeter;
 
     [Header("Sprite Swappables")]
@@ -21,24 +22,34 @@ public class UIManager : MonoBehaviour
     [SerializeField] Sprite UmbrellaSprite;
     [SerializeField] Sprite SunSprite;
 
+    [Header("TestVariables")]
+    float currTemp = 100f;
+
     public enum Face {
         Happy,
         Angry
     }
-    
+
+    private void Start()
+    {
+        SetWetCover(false, false);
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (testing)
         {
-            if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetKey(KeyCode.G))
             {
-                SetTemperature(0, .8f);
+                currTemp -= 15f * Time.deltaTime;
+                SetTemperature(0, currTemp/100);
             }
 
-            if (Input.GetKeyDown(KeyCode.H))
+            if (Input.GetKey(KeyCode.H))
             {
-                SetTemperature(3, .2f);
+                currTemp += 25f * Time.deltaTime;
+                SetTemperature(0, currTemp / 100);
             }
 
             if (Input.GetKeyDown(KeyCode.J))
@@ -71,6 +82,11 @@ public class UIManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 SetTowels(false, true);
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SetWetCover(true, false);
             }
         }
     }
@@ -132,6 +148,27 @@ public class UIManager : MonoBehaviour
         else
         {
             towelIcons[1].color = new Color(0, 0, 0, .15f);
+        }
+    }
+
+    public void SetWetCover(bool left, bool right)
+    {
+        if (left)
+        {
+            wetCovers[0].color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            wetCovers[0].color = new Color(0, 0, 0, 0);
+        }
+
+        if (right)
+        {
+            wetCovers[1].color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            wetCovers[1].color = new Color(0, 0, 0, 0);
         }
     }
 
