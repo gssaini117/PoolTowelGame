@@ -99,6 +99,7 @@ public class GameStates : MonoBehaviour
         {
 
             // pool boy chances logic
+            uiManager.SetLivesRemaining(poolBoyChances - currentPoolBoyChances);
             if (currentPoolBoyChances > 3)
             {
                 gameOver = true;
@@ -133,7 +134,7 @@ public class GameStates : MonoBehaviour
             }
             if (!towel1 && !towel2)
             {
-                currentTowelTime -= towelDecayRate * 2 * Time.deltaTime;
+                currentTowelTime -= towelDecayRate * Time.deltaTime;
             }
             else if (towel1 ^ towel2)
             {
@@ -170,19 +171,23 @@ public class GameStates : MonoBehaviour
                 if (!patronReset[i])
                 {
                     patronStatus[i] += tanningRate * umbrellaActive[i] * wetnessFactor[i] * Time.deltaTime;
+                    uiManager.SetTemperature(i, patronStatus[i] / 20f + 0.5f);
                     if (patronStatus[i] > tanningMax)
                     {
-                        Patrons[i].GetComponent<SwitchTan>().setBurnt();
+                        uiManager.SetAngry(i, true);
+                        //Patrons[i].GetComponent<SwitchTan>().setBurnt();
                         StartCoroutine(resetPatron(i));
                     }
                     else if (patronStatus[i] < tanningMin)
                     {
-                        Patrons[i].GetComponent<SwitchTan>().setPale();
+                        uiManager.SetAngry(i, true);
+                        //Patrons[i].GetComponent<SwitchTan>().setPale();
                         StartCoroutine(resetPatron(i));
                     }
                     else
                     {
-                        Patrons[i].GetComponent<SwitchTan>().setTan();
+                        uiManager.SetAngry(i, false);
+                        //Patrons[i].GetComponent<SwitchTan>().setTan();
                     }
                 }
             }
@@ -219,79 +224,79 @@ public class GameStates : MonoBehaviour
     // TODO: PROCESS ARDUINO INPUTS
     void HandleInput()
     {
-        string message = serialController.ReadSerialMessage();
+        //string message = serialController.ReadSerialMessage();
 
-        if (message == null)
-            return;
+        //if (message == null)
+        //    return;
 
-        // Check if the message is plain data or a connect/disconnect event.
-        if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_CONNECTED))
-            Debug.Log("Connection established");
-        else if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_DISCONNECTED))
-            Debug.Log("Connection attempt failed or disconnection detected");
-        else
+        //// Check if the message is plain data or a connect/disconnect event.
+        //if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_CONNECTED))
+        //    Debug.Log("Connection established");
+        //else if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_DISCONNECTED))
+        //    Debug.Log("Connection attempt failed or disconnection detected");
+        //else
+        //{
+        //    Debug.Log(message);
+        //    arduinoValues = message.Split(','); 
+        //    for (int i = 0; i < 8; i++)
+        //    {
+        //        if (arduinoValues[i] == "1")
+        //            arduinoConvertedValues[i] = true;
+        //        if (arduinoValues[i] == "0")
+        //            arduinoConvertedValues[i] = false;
+        //    }
+        //}
+
+        //umbrella[0] = arduinoConvertedValues[0];
+        //umbrella[1] = arduinoConvertedValues[1];
+        //umbrella[2] = arduinoConvertedValues[2];
+        //umbrella[3] = arduinoConvertedValues[3];
+        //towel1 = arduinoConvertedValues[4];
+        //towel2 = arduinoConvertedValues[5];
+        //water[0] = arduinoConvertedValues[6];
+        //water[1] = arduinoConvertedValues[7];
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    if (umbrella[i]) umbrellaActive[i] = -1;
+        //    else umbrellaActive[i] = 1;
+        //}
+
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            Debug.Log(message);
-            arduinoValues = message.Split(','); 
-            for (int i = 0; i < 8; i++)
-            {
-                if (arduinoValues[i] == "1")
-                    arduinoConvertedValues[i] = true;
-                if (arduinoValues[i] == "0")
-                    arduinoConvertedValues[i] = false;
-            }
+            towel1 = !towel1;
         }
-
-        umbrella[0] = arduinoConvertedValues[0];
-        umbrella[1] = arduinoConvertedValues[1];
-        umbrella[2] = arduinoConvertedValues[2];
-        umbrella[3] = arduinoConvertedValues[3];
-        towel1 = arduinoConvertedValues[4];
-        towel2 = arduinoConvertedValues[5];
-        water[0] = arduinoConvertedValues[6];
-        water[1] = arduinoConvertedValues[7];
-        for (int i = 0; i < 4; i++)
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            if (umbrella[i]) umbrellaActive[i] = -1;
-            else umbrellaActive[i] = 1;
-        } 
-
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    towel1 = !towel1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    towel2 = !towel2;
-        //}
-        //if (Input.GetKeyDown(KeyCode.W))
-        //{
-        //    water[0] = !water[0];
-        //}
-        //if (Input.GetKeyDown(KeyCode.O))
-        //{
-        //    water[1] = !water[1];
-        //}
-        //if (Input.GetKeyDown(KeyCode.E))
-        //{
-        //    umbrella[0] = !umbrella[0];
-        //    umbrellaActive[0] *= -1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    umbrella[1] = !umbrella[1];
-        //    umbrellaActive[1] *= -1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.I))
-        //{
-        //    umbrella[2] = !umbrella[2];
-        //    umbrellaActive[2] *= -1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.U))
-        //{
-        //    umbrella[3] = !umbrella[3];
-        //    umbrellaActive[3] *= -1;
-        //}
+            towel2 = !towel2;
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            water[0] = !water[0];
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            water[1] = !water[1];
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            umbrella[0] = !umbrella[0];
+            umbrellaActive[0] *= -1;
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            umbrella[1] = !umbrella[1];
+            umbrellaActive[1] *= -1;
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            umbrella[2] = !umbrella[2];
+            umbrellaActive[2] *= -1;
+        }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            umbrella[3] = !umbrella[3];
+            umbrellaActive[3] *= -1;
+        }
     }
 
     // Switches Material based on status
@@ -326,10 +331,9 @@ public class GameStates : MonoBehaviour
     {
         patronReset[i] = true;
         currentPoolBoyChances++;
-        yield return new WaitForSeconds(2f);
-        Patrons[i].GetComponent<SwitchTan>().setAngry();
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         patronStatus[i] = 0;
+        uiManager.SetAngry(i, false);
         patronReset[i] = false;
     }
 }
