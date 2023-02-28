@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image[] umbrellaSlots;
     [SerializeField] Image[] patronLives;
     [SerializeField] Image[] towelIcons;
+    [SerializeField] Image[] wetCovers;
     [SerializeField] Image towelMeter;
 
     [Header("Sprite Swappables")]
@@ -25,7 +26,12 @@ public class UIManager : MonoBehaviour
         Happy,
         Angry
     }
-    
+
+    private void Start()
+    {
+        SetWetCover(false, false);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -71,6 +77,11 @@ public class UIManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 SetTowels(false, true);
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SetWetCover(true, false);
             }
         }
     }
@@ -132,6 +143,27 @@ public class UIManager : MonoBehaviour
         else
         {
             towelIcons[1].color = new Color(0, 0, 0, .15f);
+        }
+    }
+
+    public void SetWetCover(bool left, bool right)
+    {
+        if (left)
+        {
+            wetCovers[0].color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            wetCovers[0].color = new Color(0, 0, 0, 0);
+        }
+
+        if (right)
+        {
+            wetCovers[1].color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            wetCovers[1].color = new Color(0, 0, 0, 0);
         }
     }
 
