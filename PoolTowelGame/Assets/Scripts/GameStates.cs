@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class GameStates : MonoBehaviour
 {
+    // UI Manager
+    [SerializeField] UIManager uiManager;
+
     // Arduino Values
     public SerialController serialController;
     private string[] arduinoValues;
@@ -86,7 +89,7 @@ public class GameStates : MonoBehaviour
     void Update()
     {
         HandleInput();
-        UpdateMaterials();
+        UpdateUI();
     }
 
     // Fixed Update is called once per frame at 60 fps
@@ -121,9 +124,8 @@ public class GameStates : MonoBehaviour
             }
 
             // towel time logic
-            //Debug.Log(currentTowelTime);
-            TowelBar.transform.localScale = new Vector3(TowelBar.transform.localScale.x, currentTowelTime / 10, TowelBar.transform.localScale.z);
-            // ^^ towel bar implementation
+            uiManager.SetTowelMeter(currentTowelTime / towelTime);
+            //TowelBar.transform.localScale = new Vector3(TowelBar.transform.localScale.x, currentTowelTime / 10, TowelBar.transform.localScale.z);
             if (currentTowelTime < 0)
             {
                 gameOver = true;
@@ -254,48 +256,53 @@ public class GameStates : MonoBehaviour
             else umbrellaActive[i] = 1;
         } 
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            towel1 = !towel1;
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            towel2 = !towel2;
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            water[0] = !water[0];
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            water[1] = !water[1];
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            umbrella[0] = !umbrella[0];
-            umbrellaActive[0] *= -1;
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            umbrella[1] = !umbrella[1];
-            umbrellaActive[1] *= -1;
-        }
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            umbrella[2] = !umbrella[2];
-            umbrellaActive[2] *= -1;
-        }
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            umbrella[3] = !umbrella[3];
-            umbrellaActive[3] *= -1;
-        }
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    towel1 = !towel1;
+        //}
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    towel2 = !towel2;
+        //}
+        //if (Input.GetKeyDown(KeyCode.W))
+        //{
+        //    water[0] = !water[0];
+        //}
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    water[1] = !water[1];
+        //}
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    umbrella[0] = !umbrella[0];
+        //    umbrellaActive[0] *= -1;
+        //}
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    umbrella[1] = !umbrella[1];
+        //    umbrellaActive[1] *= -1;
+        //}
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    umbrella[2] = !umbrella[2];
+        //    umbrellaActive[2] *= -1;
+        //}
+        //if (Input.GetKeyDown(KeyCode.U))
+        //{
+        //    umbrella[3] = !umbrella[3];
+        //    umbrellaActive[3] *= -1;
+        //}
     }
 
     // Switches Material based on status
     // TODO: CHANGE FROM JUST SWITCHING MATERIAL TO REFLECTING VALUES ON THE GAME UI
-    void UpdateMaterials()
+    void UpdateUI()
     {
+        uiManager.SetTowels(towel1, towel2);
+        uiManager.SetWetCover(water[0], water[1]);
+        for (int i = 0; i < 4; i++) { uiManager.SetUmbrella(i, umbrella[i]); }
+
+
         if (towel1) TowelSensor1.GetComponent<SwitchMaterial>().setActiveMaterial();
         else TowelSensor1.GetComponent<SwitchMaterial>().setInactiveMaterial();
         if (towel2) TowelSensor2.GetComponent<SwitchMaterial>().setActiveMaterial();
