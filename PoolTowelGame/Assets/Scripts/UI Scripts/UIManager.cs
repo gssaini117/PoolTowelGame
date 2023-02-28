@@ -75,18 +75,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void SetTemperature(int patronNum, float value)
+    public void SetTemperature(int patronNum, float value)
     {
         Image meterImage = temperatureMeters[patronNum];
         meterImage.fillAmount = value;
     }
 
-    void SetTowelMeter(float value)
+    public void SetTowelMeter(float value)
     {
         towelMeter.fillAmount = value;
     }
 
-    void SetLivesRemaining(int livesRemaining)
+    public void SetLivesRemaining(int livesRemaining)
     {
         if (livesRemaining == 3)
         {
@@ -114,7 +114,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void SetTowels(bool left, bool right)
+    public void SetTowels(bool left, bool right)
     {
         if (left)
         {
@@ -135,7 +135,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void SetAngry(int patronNum, bool isAngry)
+    public void SetAngry(int patronNum, bool isAngry)
     {
         if (isAngry)
         {
@@ -147,7 +147,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    void SetUmbrella(int patronNum, bool isCovered)
+    public void SetUmbrella(int patronNum, bool isCovered)
     {
         if (isCovered)
         {
