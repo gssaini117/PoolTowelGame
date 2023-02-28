@@ -22,6 +22,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] Sprite UmbrellaSprite;
     [SerializeField] Sprite SunSprite;
 
+    [Header("TestVariables")]
+    float currTemp = 100f;
+
     public enum Face {
         Happy,
         Angry
@@ -37,14 +40,16 @@ public class UIManager : MonoBehaviour
     {
         if (testing)
         {
-            if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetKey(KeyCode.G))
             {
-                SetTemperature(0, .8f);
+                currTemp -= 15f * Time.deltaTime;
+                SetTemperature(0, currTemp/100);
             }
 
-            if (Input.GetKeyDown(KeyCode.H))
+            if (Input.GetKey(KeyCode.H))
             {
-                SetTemperature(3, .2f);
+                currTemp += 25f * Time.deltaTime;
+                SetTemperature(0, currTemp / 100);
             }
 
             if (Input.GetKeyDown(KeyCode.J))
