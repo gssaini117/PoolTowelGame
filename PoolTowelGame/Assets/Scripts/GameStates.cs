@@ -194,6 +194,7 @@ public class GameStates : MonoBehaviour
 
             // game timer
             gameTimer += Time.deltaTime;
+            uiManager.SetCountdownTimerText( (int)gameLength - (int)gameTimer);
             if (gameTimer > gameLength)
             {
                 gameOver = true;

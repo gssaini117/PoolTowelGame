@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image[] towelIcons;
     [SerializeField] Image[] wetCovers;
     [SerializeField] Image towelMeter;
+    [SerializeField] Text timerText;
 
     [Header("Sprite Swappables")]
     [SerializeField] Sprite SmileyFaceSprite;
@@ -33,6 +34,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         SetWetCover(false, false);
+        SetCountdownTimerText(152);
     }
 
     // Update is called once per frame
@@ -194,5 +196,10 @@ public class UIManager : MonoBehaviour
         {
             umbrellaSlots[patronNum].sprite = SunSprite;
         }
+    }
+
+    public void SetCountdownTimerText(int time)
+    {
+        timerText.text = time.ToString();
     }
 }
