@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image[] patronLives;
     [SerializeField] Image[] towelIcons;
     [SerializeField] Image[] wetCovers;
+    [SerializeField] Image endScreen;
     [SerializeField] Image warningScreen;
     [SerializeField] Image warningMeter;
     [SerializeField] Image towelMeter;
@@ -24,6 +25,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Sprite AngryFaceSprite;
     [SerializeField] Sprite UmbrellaSprite;
     [SerializeField] Sprite SunSprite;
+    [SerializeField] Sprite TowelBoyWinsSprite;
+    [SerializeField] Sprite PoolBoyWinsSprite;
 
     [Header("TestVariables")]
     float currTemp = 100f;
@@ -35,6 +38,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        endScreen.color = new Color(0, 0, 0, 0);
         SetWetCover(false, false);
         SetWarningIsOn(false);
     }
@@ -222,5 +226,19 @@ public class UIManager : MonoBehaviour
     public void SetCountdownTimerText(int time)
     {
         timerText.text = time.ToString();
+    }
+
+    public void DisplayEndScreen(bool towelBoyWon)
+    {
+        if (towelBoyWon)
+        {
+            endScreen.sprite = TowelBoyWinsSprite;
+        } 
+        else
+        {
+            endScreen.sprite = PoolBoyWinsSprite;
+        }
+
+        endScreen.color = new Color(1, 1, 1, 1);
     }
 }

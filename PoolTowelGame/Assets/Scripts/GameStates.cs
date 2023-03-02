@@ -104,6 +104,7 @@ public class GameStates : MonoBehaviour
             {
                 gameOver = true;
                 towelBoyWins = true;
+                uiManager.DisplayEndScreen(true);
             }
 
             // emergency mode logic
@@ -120,6 +121,7 @@ public class GameStates : MonoBehaviour
                     uiManager.SetWarningIsOn(false);
                     gameOver = true;
                     towelBoyWins = true;
+                    uiManager.DisplayEndScreen(true);
                 }
             }
             else
@@ -135,6 +137,7 @@ public class GameStates : MonoBehaviour
             {
                 gameOver = true;
                 poolBoyWins = true;
+                uiManager.DisplayEndScreen(false);
             }
             if (!towel1 && !towel2)
             {
@@ -203,6 +206,7 @@ public class GameStates : MonoBehaviour
             {
                 gameOver = true;
                 poolBoyWins = true;
+                uiManager.DisplayEndScreen(false);
             }
         }
         else
