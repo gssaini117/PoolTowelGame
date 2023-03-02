@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image[] patronLives;
     [SerializeField] Image[] towelIcons;
     [SerializeField] Image[] wetCovers;
+    [SerializeField] Image warningScreen;
+    [SerializeField] Image warningMeter;
     [SerializeField] Image towelMeter;
     [SerializeField] Text timerText;
 
@@ -34,7 +36,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         SetWetCover(false, false);
-        SetCountdownTimerText(152);
+        SetWarningIsOn(false);
     }
 
     // Update is called once per frame
@@ -172,6 +174,25 @@ public class UIManager : MonoBehaviour
         {
             wetCovers[1].color = new Color(0, 0, 0, 0);
         }
+    }
+
+    public void SetWarningIsOn(bool isOn)
+    {
+        if (isOn)
+        {
+            warningScreen.color = new Color(1, 1, 1, 1);
+            warningMeter.color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            warningScreen.color = new Color(0, 0, 0, 0);
+            warningMeter.color = new Color(0, 0, 0, 0);
+        }
+    }
+
+    public void SetWarningMeter(float value)
+    {
+        warningMeter.fillAmount = value;
     }
 
     public void SetAngry(int patronNum, bool isAngry)
