@@ -177,7 +177,7 @@ public class GameStates : MonoBehaviour
             {
                 if (!patronReset[i])
                 {
-                    patronStatus[i] += tanningRate * umbrellaActive[i] * wetnessFactor[i] * Time.deltaTime;
+                    patronStatus[i] += tanningRate * umbrellaActive[i] * wetnessFactor[i] * Time.deltaTime * 0.3f;
                     uiManager.SetTemperature(i, patronStatus[i] / 20f + 0.5f);
                     if (patronStatus[i] > tanningMax)
                     {
