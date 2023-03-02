@@ -109,18 +109,22 @@ public class GameStates : MonoBehaviour
             // emergency mode logic
             if (water[0] && water[1])
             {
+                uiManager.SetWarningIsOn(true);
                 if (emergencyModeTimer < emergencyModeDuration)
                 {
                     emergencyModeTimer += Time.deltaTime;
+                    uiManager.SetWarningMeter((emergencyModeDuration - emergencyModeTimer)/emergencyModeDuration);
                 }
                 else
                 {
+                    uiManager.SetWarningIsOn(false);
                     gameOver = true;
                     towelBoyWins = true;
                 }
             }
             else
             {
+                uiManager.SetWarningIsOn(false);
                 emergencyModeTimer = 0f;
             }
 
