@@ -104,23 +104,29 @@ public class GameStates : MonoBehaviour
             {
                 gameOver = true;
                 towelBoyWins = true;
+                uiManager.DisplayEndScreen(true);
             }
 
             // emergency mode logic
             if (water[0] && water[1])
             {
+                uiManager.SetWarningIsOn(true);
                 if (emergencyModeTimer < emergencyModeDuration)
                 {
                     emergencyModeTimer += Time.deltaTime;
+                    uiManager.SetWarningMeter((emergencyModeDuration - emergencyModeTimer)/emergencyModeDuration);
                 }
                 else
                 {
+                    uiManager.SetWarningIsOn(false);
                     gameOver = true;
                     towelBoyWins = true;
+                    uiManager.DisplayEndScreen(true);
                 }
             }
             else
             {
+                uiManager.SetWarningIsOn(false);
                 emergencyModeTimer = 0f;
             }
 
@@ -131,6 +137,7 @@ public class GameStates : MonoBehaviour
             {
                 gameOver = true;
                 poolBoyWins = true;
+                uiManager.DisplayEndScreen(false);
             }
             if (!towel1 && !towel2)
             {
@@ -194,10 +201,12 @@ public class GameStates : MonoBehaviour
 
             // game timer
             gameTimer += Time.deltaTime;
+            uiManager.SetCountdownTimerText( (int)gameLength - (int)gameTimer);
             if (gameTimer > gameLength)
             {
                 gameOver = true;
                 poolBoyWins = true;
+                uiManager.DisplayEndScreen(false);
             }
         }
         else

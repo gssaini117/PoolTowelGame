@@ -14,13 +14,19 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image[] patronLives;
     [SerializeField] Image[] towelIcons;
     [SerializeField] Image[] wetCovers;
+    [SerializeField] Image endScreen;
+    [SerializeField] Image warningScreen;
+    [SerializeField] Image warningMeter;
     [SerializeField] Image towelMeter;
+    [SerializeField] Text timerText;
 
     [Header("Sprite Swappables")]
     [SerializeField] Sprite SmileyFaceSprite;
     [SerializeField] Sprite AngryFaceSprite;
     [SerializeField] Sprite UmbrellaSprite;
     [SerializeField] Sprite SunSprite;
+    [SerializeField] Sprite TowelBoyWinsSprite;
+    [SerializeField] Sprite PoolBoyWinsSprite;
 
     [Header("TestVariables")]
     float currTemp = 100f;
@@ -32,7 +38,9 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        endScreen.color = new Color(0, 0, 0, 0);
         SetWetCover(false, false);
+        SetWarningIsOn(false);
     }
 
     // Update is called once per frame
@@ -172,6 +180,25 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void SetWarningIsOn(bool isOn)
+    {
+        if (isOn)
+        {
+            warningScreen.color = new Color(1, 1, 1, 1);
+            warningMeter.color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            warningScreen.color = new Color(0, 0, 0, 0);
+            warningMeter.color = new Color(0, 0, 0, 0);
+        }
+    }
+
+    public void SetWarningMeter(float value)
+    {
+        warningMeter.fillAmount = value;
+    }
+
     public void SetAngry(int patronNum, bool isAngry)
     {
         if (isAngry)
@@ -194,5 +221,24 @@ public class UIManager : MonoBehaviour
         {
             umbrellaSlots[patronNum].sprite = SunSprite;
         }
+    }
+
+    public void SetCountdownTimerText(int time)
+    {
+        timerText.text = time.ToString();
+    }
+
+    public void DisplayEndScreen(bool towelBoyWon)
+    {
+        if (towelBoyWon)
+        {
+            endScreen.sprite = TowelBoyWinsSprite;
+        } 
+        else
+        {
+            endScreen.sprite = PoolBoyWinsSprite;
+        }
+
+        endScreen.color = new Color(1, 1, 1, 1);
     }
 }
