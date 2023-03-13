@@ -280,6 +280,6 @@ public class UIManager : MonoBehaviour
 
     public void RandomizePatron(int patronNum)
     {
-        patronFaceMarkers[patronNum] = Random.Range(0, 3);
+        patronFaceMarkers[patronNum] = Random.Range(0, 4);
     }
 }

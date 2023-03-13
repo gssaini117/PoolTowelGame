@@ -540,20 +540,20 @@ MonoBehaviour:
   TowelBoyWinsSprite: {fileID: 21300000, guid: 025a41cdea1ab0e40b01bcaa178c60a2, type: 3}
   PoolBoyWinsSprite: {fileID: 21300000, guid: 531e3c33680336e48ae1085055122160, type: 3}
   HappySprites:
-  - {fileID: 21300000, guid: 09b8b664f40455e4585befee9da0c8ff, type: 3}
-  - {fileID: 21300000, guid: 0c0c9892fe42f68429223890ac796d9d, type: 3}
-  - {fileID: 21300000, guid: 7733310c5120c7f4eb749ea571fb9956, type: 3}
-  - {fileID: 21300000, guid: 7350f7e8590cc2547b24d48f952118a1, type: 3}
+  - {fileID: 21300000, guid: c33be64b2f822924ea7bd7a76652e741, type: 3}
+  - {fileID: 21300000, guid: 5abba8123a917854ba17c8d4e3e24794, type: 3}
+  - {fileID: 21300000, guid: 7120d580a0ba0834db3f7b502d603d39, type: 3}
+  - {fileID: 21300000, guid: e6931791b508ee14180b3c17ec565ea8, type: 3}
   ColdSprites:
-  - {fileID: 21300000, guid: 3ce44a77fd7925b4b8dc3778cccd3f55, type: 3}
-  - {fileID: 21300000, guid: 78dc6e06664e1c047a27f084763ef277, type: 3}
-  - {fileID: 21300000, guid: 89749c5eeb96e5346bfd0aa068366412, type: 3}
-  - {fileID: 21300000, guid: 463637581a1bb1e4a96f48cfa225aada, type: 3}
+  - {fileID: 21300000, guid: 78f0430e076bc67459544b7d44aa7990, type: 3}
+  - {fileID: 21300000, guid: 8cf44c750929e58408cc4266246cfc19, type: 3}
+  - {fileID: 21300000, guid: 8775c4d259420a14c8cfe640f6ecd6e2, type: 3}
+  - {fileID: 21300000, guid: f9560ab5d18ab6d47983231b5919fafa, type: 3}
   HotSprites:
-  - {fileID: 21300000, guid: 3c20c9f2a0d8a6b4396a788c2bfc68e4, type: 3}
-  - {fileID: 21300000, guid: 8026f5f4527d5b843b56dfc9b8e91ccc, type: 3}
-  - {fileID: 21300000, guid: e4354747ddbac62419b64eda5547d65c, type: 3}
-  - {fileID: 21300000, guid: ecc76211c31048e4783c966c3f71f21a, type: 3}
+  - {fileID: 21300000, guid: 4e28ba13584083047a8c74abf1545d5b, type: 3}
+  - {fileID: 21300000, guid: ff71dc168f265b548b5e2c1e969e90c9, type: 3}
+  - {fileID: 21300000, guid: 357c59833b3da9c45ae3acf9ba26e4c1, type: 3}
+  - {fileID: 21300000, guid: 9ace1f5cd2e085c439b3c0abf932ca84, type: 3}
 --- !u!114 &3806465230095826894
 MonoBehaviour:
   m_ObjectHideFlags: 0
