@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    // Inspector Variables
+
     [SerializeField] bool testing;
     
     [Header("Canvas References")]
@@ -21,19 +23,26 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text timerText;
 
     [Header("Sprite Swappables")]
-    [SerializeField] Sprite SmileyFaceSprite;
-    [SerializeField] Sprite AngryFaceSprite;
     [SerializeField] Sprite UmbrellaSprite;
     [SerializeField] Sprite SunSprite;
     [SerializeField] Sprite TowelBoyWinsSprite;
     [SerializeField] Sprite PoolBoyWinsSprite;
+    [SerializeField] Sprite[] HappySprites;
+    [SerializeField] Sprite[] ColdSprites;
+    [SerializeField] Sprite[] HotSprites;
 
     [Header("TestVariables")]
     float currTemp = 100f;
 
-    public enum Face {
+    // Patron Art Management Variables
+
+    int[] patronFaceMarkers = { 0, 1, 2, 3 };
+
+    public enum Emote {
+        Hot,
         Happy,
-        Angry
+        Cold,
+        Gone,
     }
 
     private void Start()
@@ -41,6 +50,11 @@ public class UIManager : MonoBehaviour
         endScreen.color = new Color(0, 0, 0, 0);
         SetWetCover(false, false);
         SetWarningIsOn(false);
+
+        SetEmotion(0, Emote.Happy);
+        SetEmotion(1, Emote.Happy);
+        SetEmotion(2, Emote.Happy);
+        SetEmotion(3, Emote.Happy);
     }
 
     // Update is called once per frame
@@ -62,7 +76,7 @@ public class UIManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.J))
             {
-                SetAngry(3, true);
+                SetEmotion(3, Emote.Hot);
             }
 
             if (Input.GetKeyDown(KeyCode.K))
@@ -95,6 +109,18 @@ public class UIManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.R))
             {
                 SetWetCover(true, false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                RandomizePatron(0);
+                SetEmotion(0, Emote.Happy);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                RandomizePatron(3);
+                SetEmotion(3, Emote.Happy);
             }
         }
     }
@@ -199,15 +225,25 @@ public class UIManager : MonoBehaviour
         warningMeter.fillAmount = value;
     }
 
-    public void SetAngry(int patronNum, bool isAngry)
+    public void SetEmotion(int patronNum, Emote emote)
     {
-        if (isAngry)
+        faces[patronNum].color = new Color(1, 1, 1, 1);
+
+        if (emote == Emote.Hot)
         {
-            faces[patronNum].sprite = AngryFaceSprite;
-        } 
+            faces[patronNum].sprite = HotSprites[patronFaceMarkers[patronNum]];
+        }
+        else if (emote == Emote.Cold)
+        {
+            faces[patronNum].sprite = ColdSprites[patronFaceMarkers[patronNum]];
+        }
+        else if (emote == Emote.Happy)
+        {
+            faces[patronNum].sprite = HappySprites[patronFaceMarkers[patronNum]];
+        }
         else
         {
-            faces[patronNum].sprite = SmileyFaceSprite;
+            faces[patronNum].color = new Color(1, 1, 1, 0);
         }
     }
 
@@ -240,5 +276,10 @@ public class UIManager : MonoBehaviour
         }
 
         endScreen.color = new Color(1, 1, 1, 1);
+    }
+
+    public void RandomizePatron(int patronNum)
+    {
+        patronFaceMarkers[patronNum] = Random.Range(0, 3);
     }
 }

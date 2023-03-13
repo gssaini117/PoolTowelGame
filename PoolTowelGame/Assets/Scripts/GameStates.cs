@@ -181,19 +181,19 @@ public class GameStates : MonoBehaviour
                     uiManager.SetTemperature(i, patronStatus[i] / 20f + 0.5f);
                     if (patronStatus[i] > tanningMax)
                     {
-                        uiManager.SetAngry(i, true);
+                        uiManager.SetEmotion(i, UIManager.Emote.Hot);
                         //Patrons[i].GetComponent<SwitchTan>().setBurnt();
                         StartCoroutine(resetPatron(i));
                     }
                     else if (patronStatus[i] < tanningMin)
                     {
-                        uiManager.SetAngry(i, true);
+                        uiManager.SetEmotion(i, UIManager.Emote.Cold);
                         //Patrons[i].GetComponent<SwitchTan>().setPale();
                         StartCoroutine(resetPatron(i));
                     }
                     else
                     {
-                        uiManager.SetAngry(i, false);
+                        uiManager.SetEmotion(i, UIManager.Emote.Happy);
                         //Patrons[i].GetComponent<SwitchTan>().setTan();
                     }
                 }
@@ -340,9 +340,10 @@ public class GameStates : MonoBehaviour
     {
         patronReset[i] = true;
         currentPoolBoyChances++;
+        uiManager.SetEmotion(i, UIManager.Emote.Gone);
         yield return new WaitForSeconds(5f);
         patronStatus[i] = 0;
-        uiManager.SetAngry(i, false);
+        uiManager.SetEmotion(i, UIManager.Emote.Happy);
         patronReset[i] = false;
     }
 }
