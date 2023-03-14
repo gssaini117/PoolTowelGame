@@ -9,7 +9,6 @@ public class SFXManager : MonoBehaviour
     [Header("Audio Sources")]
     [SerializeField] AudioSource patronSource;
     [SerializeField] AudioSource splashSource;
-    [SerializeField] AudioSource alarmSource;
 
     [Header("SFX List")]
     [SerializeField] AudioClip patronHotClip;
