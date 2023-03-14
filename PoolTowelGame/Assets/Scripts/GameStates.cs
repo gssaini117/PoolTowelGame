@@ -343,6 +343,7 @@ public class GameStates : MonoBehaviour
         uiManager.SetEmotion(i, UIManager.Emote.Gone);
         yield return new WaitForSeconds(5f);
         patronStatus[i] = 0;
+        uiManager.RandomizePatron(i);
         uiManager.SetEmotion(i, UIManager.Emote.Happy);
         patronReset[i] = false;
     }
