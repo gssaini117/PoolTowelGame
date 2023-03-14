@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,8 @@ public class GameStates : MonoBehaviour
 {
     // UI Manager
     [SerializeField] UIManager uiManager;
+    [SerializeField] SFXManager sfxManager;
+    [SerializeField] MusicManager musicManager;
 
     // Arduino Values
     public SerialController serialController;
@@ -111,6 +114,7 @@ public class GameStates : MonoBehaviour
             if (water[0] && water[1])
             {
                 uiManager.SetWarningIsOn(true);
+                musicManager.SetMusicMode(MusicManager.MusicMode.emergency);
                 if (emergencyModeTimer < emergencyModeDuration)
                 {
                     emergencyModeTimer += Time.deltaTime;
@@ -118,14 +122,16 @@ public class GameStates : MonoBehaviour
                 }
                 else
                 {
+                    musicManager.SetMusicMode(MusicManager.MusicMode.normal);
                     uiManager.SetWarningIsOn(false);
+                    uiManager.DisplayEndScreen(true);
                     gameOver = true;
                     towelBoyWins = true;
-                    uiManager.DisplayEndScreen(true);
                 }
             }
             else
             {
+                musicManager.SetMusicMode(MusicManager.MusicMode.normal);
                 uiManager.SetWarningIsOn(false);
                 emergencyModeTimer = 0f;
             }
@@ -181,19 +187,19 @@ public class GameStates : MonoBehaviour
                     uiManager.SetTemperature(i, patronStatus[i] / 20f + 0.5f);
                     if (patronStatus[i] > tanningMax)
                     {
-                        uiManager.SetAngry(i, true);
+                        uiManager.SetEmotion(i, UIManager.Emote.Hot);
                         //Patrons[i].GetComponent<SwitchTan>().setBurnt();
                         StartCoroutine(resetPatron(i));
                     }
                     else if (patronStatus[i] < tanningMin)
                     {
-                        uiManager.SetAngry(i, true);
+                        uiManager.SetEmotion(i, UIManager.Emote.Cold);
                         //Patrons[i].GetComponent<SwitchTan>().setPale();
                         StartCoroutine(resetPatron(i));
                     }
                     else
                     {
-                        uiManager.SetAngry(i, false);
+                        uiManager.SetEmotion(i, UIManager.Emote.Happy);
                         //Patrons[i].GetComponent<SwitchTan>().setTan();
                     }
                 }
@@ -340,9 +346,11 @@ public class GameStates : MonoBehaviour
     {
         patronReset[i] = true;
         currentPoolBoyChances++;
+        uiManager.SetEmotion(i, UIManager.Emote.Gone);
         yield return new WaitForSeconds(5f);
         patronStatus[i] = 0;
-        uiManager.SetAngry(i, false);
+        uiManager.RandomizePatron(i);
+        uiManager.SetEmotion(i, UIManager.Emote.Happy);
         patronReset[i] = false;
     }
 }
