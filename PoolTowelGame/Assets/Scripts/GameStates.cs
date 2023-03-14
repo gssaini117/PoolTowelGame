@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,8 @@ public class GameStates : MonoBehaviour
 {
     // UI Manager
     [SerializeField] UIManager uiManager;
+    [SerializeField] SFXManager sfxManager;
+    [SerializeField] MusicManager musicManager;
 
     // Arduino Values
     public SerialController serialController;
@@ -111,6 +114,7 @@ public class GameStates : MonoBehaviour
             if (water[0] && water[1])
             {
                 uiManager.SetWarningIsOn(true);
+                musicManager.SetMusicMode(MusicManager.MusicMode.emergency);
                 if (emergencyModeTimer < emergencyModeDuration)
                 {
                     emergencyModeTimer += Time.deltaTime;
@@ -118,14 +122,16 @@ public class GameStates : MonoBehaviour
                 }
                 else
                 {
+                    musicManager.SetMusicMode(MusicManager.MusicMode.normal);
                     uiManager.SetWarningIsOn(false);
+                    uiManager.DisplayEndScreen(true);
                     gameOver = true;
                     towelBoyWins = true;
-                    uiManager.DisplayEndScreen(true);
                 }
             }
             else
             {
+                musicManager.SetMusicMode(MusicManager.MusicMode.normal);
                 uiManager.SetWarningIsOn(false);
                 emergencyModeTimer = 0f;
             }

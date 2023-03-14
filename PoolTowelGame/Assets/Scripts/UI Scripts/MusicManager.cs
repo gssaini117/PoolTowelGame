@@ -59,7 +59,7 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-    void SetMusicMode(MusicMode mode)
+    public void SetMusicMode(MusicMode mode)
     {
         if (currentMode != mode)
         {
