@@ -72,6 +72,7 @@ public class GameStates : MonoBehaviour
     // Emergency Values
     public float emergencyModeDuration;
     private float emergencyModeTimer; // actual value
+    private bool pausingForEmergency = false;
 
     // Start is called before the first frame update
     void Start()
@@ -119,6 +120,7 @@ public class GameStates : MonoBehaviour
             if (water[0] && water[1])
             {
                 uiManager.SetWarningIsOn(true);
+                pausingForEmergency = true;
                 musicManager.SetMusicMode(MusicManager.MusicMode.emergency);
                 if (emergencyModeTimer < emergencyModeDuration)
                 {
@@ -132,10 +134,12 @@ public class GameStates : MonoBehaviour
                     uiManager.DisplayEndScreen(true);
                     gameOver = true;
                     towelBoyWins = true;
+                    pausingForEmergency = false;
                 }
             }
             else
             {
+                pausingForEmergency = false;
                 musicManager.SetMusicMode(MusicManager.MusicMode.normal);
                 uiManager.SetWarningIsOn(false);
                 emergencyModeTimer = 0f;
@@ -152,17 +156,17 @@ public class GameStates : MonoBehaviour
             }
             if (!towel1 && !towel2)
             {
-                currentTowelTime -= towelDecayRate * Time.deltaTime;
+                if (!pausingForEmergency) currentTowelTime -= towelDecayRate * Time.deltaTime;
             }
             else if (towel1 ^ towel2)
             {
                 if (towelGracePeriodTimer < towelGracePeriodDuration)
                 {
-                    towelGracePeriodTimer += Time.deltaTime;
+                    if (!pausingForEmergency) towelGracePeriodTimer += Time.deltaTime;
                 }
                 else
                 {
-                    currentTowelTime -= towelDecayRate * Time.deltaTime;
+                    if (!pausingForEmergency) currentTowelTime -= towelDecayRate * Time.deltaTime;
                 }
             }
             else
@@ -188,7 +192,7 @@ public class GameStates : MonoBehaviour
             {
                 if (!patronReset[i])
                 {
-                    patronStatus[i] += tanningRate * umbrellaActive[i] * wetnessFactor[i] * Time.deltaTime * 0.3f;
+                    if (!pausingForEmergency) patronStatus[i] += tanningRate * umbrellaActive[i] * wetnessFactor[i] * Time.deltaTime * 0.3f;
                     uiManager.SetTemperature(i, patronStatus[i] / 20f + 0.5f);
                     if (patronStatus[i] > tanningMax)
                     {
@@ -219,7 +223,7 @@ public class GameStates : MonoBehaviour
             }
 
             // game timer
-            gameTimer += Time.deltaTime;
+            if (!pausingForEmergency) gameTimer += Time.deltaTime;
             uiManager.SetCountdownTimerText( (int)gameLength - (int)gameTimer);
             if (gameTimer > gameLength)
             {
@@ -230,7 +234,7 @@ public class GameStates : MonoBehaviour
         }
         else
         {
-            gameOverTimer += Time.deltaTime;
+            if (!pausingForEmergency) gameOverTimer += Time.deltaTime;
             if (gameOverTimer > gameOverLength)
             {
                 SceneManager.LoadScene(0);
