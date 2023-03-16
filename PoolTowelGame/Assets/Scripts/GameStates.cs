@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class GameStates : MonoBehaviour
 {
+    // Test Variables
+    [SerializeField] bool enableTestHotkeys = false;
+    
     // UI Manager
     [SerializeField] UIManager uiManager;
     [SerializeField] SFXManager sfxManager;
@@ -57,6 +60,7 @@ public class GameStates : MonoBehaviour
     public float tanningRate;
     public float tanningMin;
     public float tanningMax;
+    public float tanningWarningBuffer;
 
     // Towel Values pt.2 
     public float towelTime;
@@ -68,6 +72,7 @@ public class GameStates : MonoBehaviour
     // Emergency Values
     public float emergencyModeDuration;
     private float emergencyModeTimer; // actual value
+    private bool pausingForEmergency = false;
 
     // Start is called before the first frame update
     void Start()
@@ -81,6 +86,7 @@ public class GameStates : MonoBehaviour
         tanningRate = 1f;
         tanningMin = -10f;
         tanningMax = 10f;
+        tanningWarningBuffer = 5.3f;
         towelTime = 30f;
         currentTowelTime = towelTime;
         towelDecayRate = 1f;
@@ -114,6 +120,7 @@ public class GameStates : MonoBehaviour
             if (water[0] && water[1])
             {
                 uiManager.SetWarningIsOn(true);
+                pausingForEmergency = true;
                 musicManager.SetMusicMode(MusicManager.MusicMode.emergency);
                 if (emergencyModeTimer < emergencyModeDuration)
                 {
@@ -127,10 +134,12 @@ public class GameStates : MonoBehaviour
                     uiManager.DisplayEndScreen(true);
                     gameOver = true;
                     towelBoyWins = true;
+                    pausingForEmergency = false;
                 }
             }
             else
             {
+                pausingForEmergency = false;
                 musicManager.SetMusicMode(MusicManager.MusicMode.normal);
                 uiManager.SetWarningIsOn(false);
                 emergencyModeTimer = 0f;
@@ -147,17 +156,17 @@ public class GameStates : MonoBehaviour
             }
             if (!towel1 && !towel2)
             {
-                currentTowelTime -= towelDecayRate * Time.deltaTime;
+                if (!pausingForEmergency) currentTowelTime -= towelDecayRate * Time.deltaTime;
             }
             else if (towel1 ^ towel2)
             {
                 if (towelGracePeriodTimer < towelGracePeriodDuration)
                 {
-                    towelGracePeriodTimer += Time.deltaTime;
+                    if (!pausingForEmergency) towelGracePeriodTimer += Time.deltaTime;
                 }
                 else
                 {
-                    currentTowelTime -= towelDecayRate * Time.deltaTime;
+                    if (!pausingForEmergency) currentTowelTime -= towelDecayRate * Time.deltaTime;
                 }
             }
             else
@@ -183,30 +192,38 @@ public class GameStates : MonoBehaviour
             {
                 if (!patronReset[i])
                 {
-                    patronStatus[i] += tanningRate * umbrellaActive[i] * wetnessFactor[i] * Time.deltaTime * 0.3f;
+                    if (!pausingForEmergency) patronStatus[i] += tanningRate * umbrellaActive[i] * wetnessFactor[i] * Time.deltaTime * 0.3f;
                     uiManager.SetTemperature(i, patronStatus[i] / 20f + 0.5f);
                     if (patronStatus[i] > tanningMax)
                     {
-                        uiManager.SetEmotion(i, UIManager.Emote.Hot);
-                        //Patrons[i].GetComponent<SwitchTan>().setBurnt();
+                        // --- Reached upper limit, now Reset Patron
                         StartCoroutine(resetPatron(i));
                     }
-                    else if (patronStatus[i] < tanningMin)
+                    else if (patronStatus[i] > tanningMax - tanningWarningBuffer) {
+                        // --- Within the upper buffer, warn the player with hot emotion
+                        uiManager.SetEmotion(i, UIManager.Emote.Hot);
+                    }
+                    else if (patronStatus[i] > tanningMin + tanningWarningBuffer)
                     {
+                        // --- Within the happy zone, set patron emotion to happy
+                        uiManager.SetEmotion(i, UIManager.Emote.Happy);
+                    }
+                    else if (patronStatus[i] > tanningMin)
+                    {
+                        // Within the lower buffer, warn the player with cold emotion
                         uiManager.SetEmotion(i, UIManager.Emote.Cold);
-                        //Patrons[i].GetComponent<SwitchTan>().setPale();
-                        StartCoroutine(resetPatron(i));
                     }
                     else
                     {
-                        uiManager.SetEmotion(i, UIManager.Emote.Happy);
+                        // --- Reached the lower limit, now Reset Patron
+                        StartCoroutine(resetPatron(i));
                         //Patrons[i].GetComponent<SwitchTan>().setTan();
                     }
                 }
             }
 
             // game timer
-            gameTimer += Time.deltaTime;
+            if (!pausingForEmergency) gameTimer += Time.deltaTime;
             uiManager.SetCountdownTimerText( (int)gameLength - (int)gameTimer);
             if (gameTimer > gameLength)
             {
@@ -217,7 +234,7 @@ public class GameStates : MonoBehaviour
         }
         else
         {
-            gameOverTimer += Time.deltaTime;
+            if (!pausingForEmergency) gameOverTimer += Time.deltaTime;
             if (gameOverTimer > gameOverLength)
             {
                 SceneManager.LoadScene(0);
@@ -239,79 +256,88 @@ public class GameStates : MonoBehaviour
     // TODO: PROCESS ARDUINO INPUTS
     void HandleInput()
     {
-        string message = serialController.ReadSerialMessage();
-
-        if (message == null)
-            return;
-
-        // Check if the message is plain data or a connect/disconnect event.
-        if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_CONNECTED))
-            Debug.Log("Connection established");
-        else if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_DISCONNECTED))
-            Debug.Log("Connection attempt failed or disconnection detected");
-        else
+        if (!enableTestHotkeys)
         {
-            Debug.Log(message);
-            arduinoValues = message.Split(',');
-            for (int i = 0; i < 8; i++)
+            // MAIN FORM OF INPUT
+
+            string message = serialController.ReadSerialMessage();
+
+            if (message == null)
+                return;
+
+            // Check if the message is plain data or a connect/disconnect event.
+            if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_CONNECTED))
+                Debug.Log("Connection established");
+            else if (ReferenceEquals(message, SerialController.SERIAL_DEVICE_DISCONNECTED))
+                Debug.Log("Connection attempt failed or disconnection detected");
+            else
             {
-                if (arduinoValues[i] == "1")
-                    arduinoConvertedValues[i] = true;
-                if (arduinoValues[i] == "0")
-                    arduinoConvertedValues[i] = false;
+                Debug.Log(message);
+                arduinoValues = message.Split(',');
+                for (int i = 0; i < 8; i++)
+                {
+                    if (arduinoValues[i] == "1")
+                        arduinoConvertedValues[i] = true;
+                    if (arduinoValues[i] == "0")
+                        arduinoConvertedValues[i] = false;
+                }
+            }
+
+            umbrella[0] = arduinoConvertedValues[0];
+            umbrella[1] = arduinoConvertedValues[1];
+            umbrella[2] = arduinoConvertedValues[2];
+            umbrella[3] = arduinoConvertedValues[3];
+            towel1 = arduinoConvertedValues[4];
+            towel2 = arduinoConvertedValues[5];
+            water[0] = arduinoConvertedValues[6];
+            water[1] = arduinoConvertedValues[7];
+            for (int i = 0; i < 4; i++)
+            {
+                if (umbrella[i]) umbrellaActive[i] = -1;
+                else umbrellaActive[i] = 1;
             }
         }
-
-        umbrella[0] = arduinoConvertedValues[0];
-        umbrella[1] = arduinoConvertedValues[1];
-        umbrella[2] = arduinoConvertedValues[2];
-        umbrella[3] = arduinoConvertedValues[3];
-        towel1 = arduinoConvertedValues[4];
-        towel2 = arduinoConvertedValues[5];
-        water[0] = arduinoConvertedValues[6];
-        water[1] = arduinoConvertedValues[7];
-        for (int i = 0; i < 4; i++)
+        else
         {
-            if (umbrella[i]) umbrellaActive[i] = -1;
-            else umbrellaActive[i] = 1;
-        }
+            // INPUT FOR TESTING PURPOSES
 
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    towel1 = !towel1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    towel2 = !towel2;
-        //}
-        //if (Input.GetKeyDown(KeyCode.W))
-        //{
-        //    water[0] = !water[0];
-        //}
-        //if (Input.GetKeyDown(KeyCode.O))
-        //{
-        //    water[1] = !water[1];
-        //}
-        //if (Input.GetKeyDown(KeyCode.E))
-        //{
-        //    umbrella[0] = !umbrella[0];
-        //    umbrellaActive[0] *= -1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    umbrella[1] = !umbrella[1];
-        //    umbrellaActive[1] *= -1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.I))
-        //{
-        //    umbrella[2] = !umbrella[2];
-        //    umbrellaActive[2] *= -1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.U))
-        //{
-        //    umbrella[3] = !umbrella[3];
-        //    umbrellaActive[3] *= -1;
-        //}
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                towel1 = !towel1;
+            }
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                towel2 = !towel2;
+            }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                water[0] = !water[0];
+            }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                water[1] = !water[1];
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                umbrella[0] = !umbrella[0];
+                umbrellaActive[0] *= -1;
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                umbrella[1] = !umbrella[1];
+                umbrellaActive[1] *= -1;
+            }
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                umbrella[2] = !umbrella[2];
+                umbrellaActive[2] *= -1;
+            }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                umbrella[3] = !umbrella[3];
+                umbrellaActive[3] *= -1;
+            }
+        }
     }
 
     // Switches Material based on status

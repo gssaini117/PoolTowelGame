@@ -868,7 +868,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 005b461a5c7f9ed439a2993ce0551b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableTestHotkeys: 1
   uiManager: {fileID: 54579906}
+  sfxManager: {fileID: 1732982616}
+  musicManager: {fileID: 1732982615}
   serialController: {fileID: 1534514160}
   TowelBar: {fileID: 2005557186}
   TowelSensor1: {fileID: 931560767}
@@ -892,6 +895,7 @@ MonoBehaviour:
   tanningRate: 0
   tanningMin: 0
   tanningMax: 0
+  tanningWarningBuffer: 0
   towelTime: 0
   towelDecayRate: 0
   towelGracePeriodDuration: 0
@@ -1701,6 +1705,28 @@ MonoBehaviour:
   tanMaterial: {fileID: 2100000, guid: 8ff2848ffd879f04fb9293eb93043e56, type: 2}
   burntMaterial: {fileID: 2100000, guid: d3578f716b41ddd4789e86f6a8a5229c, type: 2}
   angry: {fileID: 2100000, guid: 44267f3b90a43624aa22cc684d07d4ea, type: 2}
+--- !u!114 &1732982615 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5295716311227509420, guid: c4b2bb9617e671149977b83e3cf96dc6, type: 3}
+  m_PrefabInstance: {fileID: 54579905}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965ce171b94365d46ad8ff2112e46ba5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1732982616 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3806465230095826894, guid: c4b2bb9617e671149977b83e3cf96dc6, type: 3}
+  m_PrefabInstance: {fileID: 54579905}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ef0208ca4a80004c8082525f68033ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1892585642
 GameObject:
   m_ObjectHideFlags: 0
