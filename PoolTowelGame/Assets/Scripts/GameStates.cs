@@ -198,25 +198,32 @@ public class GameStates : MonoBehaviour
                     {
                         // --- Reached upper limit, now Reset Patron
                         StartCoroutine(resetPatron(i));
+                        sfxManager.SetPatronLeavingSFX(i, true);
                     }
                     else if (patronStatus[i] > tanningMax - tanningWarningBuffer) {
                         // --- Within the upper buffer, warn the player with hot emotion
                         uiManager.SetEmotion(i, UIManager.Emote.Hot);
+                        sfxManager.SetPatronHotSFX(i, true);
                     }
                     else if (patronStatus[i] > tanningMin + tanningWarningBuffer)
                     {
                         // --- Within the happy zone, set patron emotion to happy
                         uiManager.SetEmotion(i, UIManager.Emote.Happy);
+                        sfxManager.SetPatronHotSFX(i, false);
+                        sfxManager.SetPatronColdSFX(i, false);
+                        sfxManager.SetPatronLeavingSFX(i, false);
                     }
                     else if (patronStatus[i] > tanningMin)
                     {
                         // Within the lower buffer, warn the player with cold emotion
                         uiManager.SetEmotion(i, UIManager.Emote.Cold);
+                        sfxManager.SetPatronColdSFX(i, true);
                     }
                     else
                     {
                         // --- Reached the lower limit, now Reset Patron
                         StartCoroutine(resetPatron(i));
+                        sfxManager.SetPatronLeavingSFX(i, true);
                         //Patrons[i].GetComponent<SwitchTan>().setTan();
                     }
                 }
@@ -346,6 +353,8 @@ public class GameStates : MonoBehaviour
     {
         uiManager.SetTowels(towel1, towel2);
         uiManager.SetWetCover(water[0], water[1]);
+        sfxManager.SetSplashSFX(0, water[0]);
+        sfxManager.SetSplashSFX(1, water[1]);
         for (int i = 0; i < 4; i++) { uiManager.SetUmbrella(i, umbrella[i]); }
 
 

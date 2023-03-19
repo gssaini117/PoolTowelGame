@@ -7,51 +7,130 @@ public class SFXManager : MonoBehaviour
     [SerializeField] bool enableTestHotkeys = false;
     
     [Header("Audio Sources")]
-    [SerializeField] AudioSource patronSource;
-    [SerializeField] AudioSource splashSource;
+    [SerializeField] AudioSource[] patronSources;
+    [SerializeField] AudioSource[] splashSources;
 
     [Header("SFX List")]
-    [SerializeField] AudioClip patronHotClip;
-    [SerializeField] AudioClip patronColdClip;
-    [SerializeField] AudioClip patronLeavingClip;
+    [SerializeField] AudioClip[] patronHotClips;
+    [SerializeField] AudioClip[] patronColdClips;
+    [SerializeField] AudioClip[] patronLeavingClips;
     [SerializeField] AudioClip splashClip;
+
+    // Boolean Checks
+    bool[] patronHotBools       = { false, false, false, false };
+    bool[] patronColdBools      = { false, false, false, false };
+    bool[] patronLeavingBools   = { false, false, false, false };
+    bool[] splashBools = {false,false};
 
     private void Update()
     {
         if (enableTestHotkeys)
         {
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKey(KeyCode.F))
             {
-                PlaySplash();
+                SetSplashSFX(0, true);
+            }
+            else
+            {
+                SetSplashSFX(0, false);
             }
 
-            if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetKey(KeyCode.G))
             {
-                PlayPatronLeaving();
+                SetSplashSFX(1, true);
+            }
+            else
+            {
+                SetSplashSFX(1, false);
             }
         }
     }
 
-    public void PlayPatronHot()
+    public void SetPatronHotSFX(int patronNum, bool condition)
     {
-        patronSource.clip = patronHotClip;
-        patronSource.Play();
-    }
-    public void PlayPatronCold()
-    {
-        patronSource.clip = patronColdClip;
-        patronSource.Play();
+        bool lastCondition = patronHotBools[patronNum];
+        if (lastCondition != condition)
+        {
+            if (condition == true)
+            {
+                // play sfx
+                patronSources[patronNum].clip = patronHotClips[0]; // IS NOT RANDOM YET
+                patronSources[patronNum].Play();
+
+                // change condition so next 'true' call won't fire sfx
+                patronHotBools[patronNum] = true;
+            }
+            else
+            {
+                // Prep splash (enables sound play on the next 'true')
+                patronHotBools[patronNum] = false;
+            }
+        }
     }
 
-    public void PlayPatronLeaving()
+    public void SetPatronColdSFX(int patronNum, bool condition)
     {
-        patronSource.clip = patronLeavingClip;
-        patronSource.Play();
+        bool lastCondition = patronColdBools[patronNum];
+        if (lastCondition != condition)
+        {
+            if (condition == true)
+            {
+                // play sfx
+                patronSources[patronNum].clip = patronColdClips[0]; // IS NOT RANDOM YET
+                patronSources[patronNum].Play();
+
+                // change condition so next 'true' call won't fire sfx
+                patronColdBools[patronNum] = true;
+            }
+            else
+            {
+                // Prep splash (enables sound play on the next 'true')
+                patronColdBools[patronNum] = false;
+            }
+        }
     }
 
-    public void PlaySplash()
+    public void SetPatronLeavingSFX(int patronNum, bool condition)
     {
-        splashSource.clip = splashClip;
-        splashSource.Play();
+        bool lastCondition = patronLeavingBools[patronNum];
+        if (lastCondition != condition)
+        {
+            if (condition == true)
+            {
+                // play sfx
+                patronSources[patronNum].clip = patronLeavingClips[0]; // IS NOT RANDOM YET
+                patronSources[patronNum].Play();
+
+                // change condition so next 'true' call won't fire sfx
+                patronLeavingBools[patronNum] = true;
+            }
+            else
+            {
+                // Prep splash (enables sound play on the next 'true')
+                patronLeavingBools[patronNum] = false;
+            }
+        }
+    }
+
+    public void SetSplashSFX(int side, bool condition)
+    {
+        bool lastCondition = splashBools[side];
+        if (lastCondition != condition)
+        {
+            if (condition == true)
+            {
+                // play sfx
+                splashSources[side].clip = splashClip;
+                splashSources[side].Play();
+
+                // change condition so next 'true' call won't fire sfx
+                splashBools[side] = true;
+            }
+            else
+            {
+                // Prep splash (enables sound play on the next 'true')
+                splashBools[side] = false;
+            }
+        }
     }
 }

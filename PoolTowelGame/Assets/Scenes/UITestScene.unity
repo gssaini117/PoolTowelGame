@@ -464,5 +464,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3806465230095826894, guid: c4b2bb9617e671149977b83e3cf96dc6, type: 3}
+      propertyPath: enableTestHotkeys
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4b2bb9617e671149977b83e3cf96dc6, type: 3}
