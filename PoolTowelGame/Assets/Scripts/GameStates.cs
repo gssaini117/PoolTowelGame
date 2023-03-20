@@ -104,6 +104,10 @@ public class GameStates : MonoBehaviour
     // Fixed Update is called once per frame at 60 fps
     void FixedUpdate()
     {
+        int truncatedCurrentTowelTime = (int)currentTowelTime;
+        string serialMessage = truncatedCurrentTowelTime.ToString();
+        serialController.SendSerialMessage(serialMessage);
+
         if (!gameOver)
         {
 
