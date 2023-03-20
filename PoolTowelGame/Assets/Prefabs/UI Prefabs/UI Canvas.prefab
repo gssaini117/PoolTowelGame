@@ -577,9 +577,14 @@ MonoBehaviour:
   - {fileID: 2435117793880395292}
   - {fileID: 2862689862447081754}
   patronHotClips:
-  - {fileID: 8300000, guid: b47718a35dbb2e844b7905c7c023b98c, type: 3}
+  - {fileID: 8300000, guid: 873233226077da7409f0a4eba8864404, type: 3}
+  - {fileID: 8300000, guid: 127a57dbbf3fe14449f6594dca43feed, type: 3}
+  - {fileID: 8300000, guid: 9bad827075a594b42bc2cafd5816d2a2, type: 3}
+  - {fileID: 8300000, guid: 1052ce9fdc3437b4ab28ed69f0034ab9, type: 3}
   patronColdClips:
-  - {fileID: 8300000, guid: 880853c324f134c4c811c392cb6dc52a, type: 3}
+  - {fileID: 8300000, guid: c907d5fc369175b4dbaafb1df70a403c, type: 3}
+  - {fileID: 8300000, guid: bb8360a5cf4bbb146b7c614219384439, type: 3}
+  - {fileID: 8300000, guid: ef75aaea15c0a9841ad20e043043b8c3, type: 3}
   patronLeavingClips:
   - {fileID: 8300000, guid: 1f584c2d7cc585c45bcae15d5087e1cd, type: 3}
   splashClip: {fileID: 8300000, guid: 91dce2f2f4bbd9346962710f05b43898, type: 3}

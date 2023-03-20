@@ -54,7 +54,7 @@ public class SFXManager : MonoBehaviour
             if (condition == true)
             {
                 // play sfx
-                patronSources[patronNum].clip = patronHotClips[0]; // IS NOT RANDOM YET
+                patronSources[patronNum].clip = patronHotClips[Random.Range(0, 4)];
                 patronSources[patronNum].Play();
 
                 // change condition so next 'true' call won't fire sfx
@@ -76,7 +76,7 @@ public class SFXManager : MonoBehaviour
             if (condition == true)
             {
                 // play sfx
-                patronSources[patronNum].clip = patronColdClips[0]; // IS NOT RANDOM YET
+                patronSources[patronNum].clip = patronColdClips[Random.Range(0, 3)]; // ONLY RANDOM BETWEEN 0 AND 3
                 patronSources[patronNum].Play();
 
                 // change condition so next 'true' call won't fire sfx
