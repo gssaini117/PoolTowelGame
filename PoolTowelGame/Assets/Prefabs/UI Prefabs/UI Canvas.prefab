@@ -586,7 +586,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bb8360a5cf4bbb146b7c614219384439, type: 3}
   - {fileID: 8300000, guid: ef75aaea15c0a9841ad20e043043b8c3, type: 3}
   patronLeavingClips:
-  - {fileID: 8300000, guid: 1f584c2d7cc585c45bcae15d5087e1cd, type: 3}
+  - {fileID: 8300000, guid: 44c9f681b9358ad459ecf21041d6ce57, type: 3}
+  - {fileID: 8300000, guid: 10c1adeb42a74b64c93c4bbfd5736129, type: 3}
+  - {fileID: 8300000, guid: 4221f5baf05c9254fa98694d11ac572b, type: 3}
+  - {fileID: 8300000, guid: 6800097897108164ab9fe5998287e9cd, type: 3}
+  - {fileID: 8300000, guid: 189d4fcfb99e37147bf075de92b55dc4, type: 3}
   splashClip: {fileID: 8300000, guid: 91dce2f2f4bbd9346962710f05b43898, type: 3}
 --- !u!114 &5295716311227509420
 MonoBehaviour:
