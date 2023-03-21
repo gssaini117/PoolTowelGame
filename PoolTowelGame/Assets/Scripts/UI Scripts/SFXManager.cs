@@ -98,7 +98,7 @@ public class SFXManager : MonoBehaviour
             if (condition == true)
             {
                 // play sfx
-                patronSources[patronNum].clip = patronLeavingClips[0]; // IS NOT RANDOM YET
+                patronSources[patronNum].clip = patronLeavingClips[Random.Range(0, 5)]; // IS NOT RANDOM YET
                 patronSources[patronNum].Play();
 
                 // change condition so next 'true' call won't fire sfx
