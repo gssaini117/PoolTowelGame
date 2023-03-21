@@ -868,7 +868,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 005b461a5c7f9ed439a2993ce0551b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enableTestHotkeys: 1
+  enableTestHotkeys: 0
   uiManager: {fileID: 54579906}
   sfxManager: {fileID: 1732982616}
   musicManager: {fileID: 1732982615}
